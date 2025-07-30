@@ -3,9 +3,9 @@ import * as Ably from 'ably';
 import {
   ChatClient,
   Room,
-  MessageEvent,
   ConnectionStatusChange,
   RoomStatusChange,
+  ChatMessageEvent,
 } from '@ably/chat';
 
 
@@ -28,8 +28,9 @@ export class AblyService implements OnModuleInit , OnModuleDestroy {
     this.chatClient.connection.onStatusChange((change: ConnectionStatusChange) => {
       console.log("Connection state changed to", change.current);
     });
-
+    
   }
+  
   
   
   async onModuleDestroy() {

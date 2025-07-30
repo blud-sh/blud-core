@@ -6,7 +6,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Get('user-lookup')
-  async userLookup(@Body() email: string) {
-    return this.authService.userLookup(email);
+  async userLookup(@Body() body: {email: string} ) {
+    return this.authService.userLookup(body.email);
   }
 }
