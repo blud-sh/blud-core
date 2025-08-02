@@ -13,7 +13,7 @@ import {
 export class AblyService implements OnModuleInit , OnModuleDestroy {
   private ablyReal: Ably.Realtime;
   private chatClient: ChatClient;
-
+  
   private readonly logger = new Logger(AblyService.name);
 
   async onModuleInit() {
@@ -24,17 +24,26 @@ export class AblyService implements OnModuleInit , OnModuleDestroy {
 
     this.chatClient = new ChatClient(this.ablyReal);
 
-     const { off: unsubscribeConnectionStatus } =
     this.chatClient.connection.onStatusChange((change: ConnectionStatusChange) => {
-      console.log("Connection state changed to", change.current);
+      this.logger.log(`Connection status changed to: ${change.current}`);
     });
-    
+
+    this.logger.log("Ably Chat Client initialized!")
   }
   
-  
-  
   async onModuleDestroy() {
+  
     await this.ablyReal.close()
     this.logger.log('Ably connection closed');
+  }
+
+  async createRoom(roomName: string): Promise<Room>{
+    const room = await this.chatClient.rooms.get(`${roomName}`);
+
+    await room.attach();
+
+    this.logger.log(`Room: ${roomName} attached`);
+    return room;
+
   }
 }
